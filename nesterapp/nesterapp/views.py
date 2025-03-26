@@ -1,20 +1,30 @@
-from flask import Flask
+from flask import render_template, Flask, request, jsonify
 
 app = Flask(__name__)
-
 
 @app.route('/')
 
 def index():
 
-    return "Hello world !"
+    return render_template('index.html')
 
+@app.route('/sonde1', methods=['POST'])
 
-if __name__ == "__main__":
+def sonde1():
+    data = request.get_json()
+    if data:
+        return render_template('sonde1.html')
+    else:
+        return render_template('sonde1.html')
 
-    app.run()
+@app.route('/sonde2')
 
+def sonde2():
 
-# Config options - Make sure you created a 'config.py' file.
-app.config.from_object('config')
-# To get one variable, tape app.config['MY_VARIABLE']
+    return render_template('sonde2.html')
+
+@app.route('/sonde3')
+
+def sonde3():
+
+    return render_template('sonde3.html')

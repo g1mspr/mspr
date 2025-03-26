@@ -8,3 +8,5 @@
     # run.py : Point d'entrée pour exécuter l'application.
     # config.py : Fichier de configuration pour l'application.
     # requirements.txt : Liste des dépendances Python.
+
+#Pour lancer l'application allez dans la racine du projet nesterapp et faite la commande : python3 run.py
