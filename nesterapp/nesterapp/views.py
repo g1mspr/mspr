@@ -28,23 +28,65 @@ def login():
 @app.route('/accueil')
 
 def accueil():
+    conn = get_db_connection()
+    # Get the most recent ping date per probe from the online table.
+    # We assume the ping_date is stored as 'YYYY-MM-DD HH:MM:SS'
+    probes_data = conn.execute(
+        """
+        SELECT probe_id, MAX(ping_date) as last_ping
+        FROM online
+        GROUP BY probe_id
+        """
+    ).fetchall()
+    conn.close()
 
-    return render_template('index.html')
+    probes = []
+    now = datetime.now()
+    # Process each probe to determine its status.
+    for row in probes_data:
+        # Parse the ping date
+        last_ping = datetime.strptime(row["last_ping"], '%Y-%m-%d %H:%M:%S')
+        # Determine if probe is online: within 10 seconds from now.
+        status = "online" if (now - last_ping).total_seconds() <= 10 else "offline"
+        probes.append({
+            "probe_id": row["probe_id"],
+            "last_ping": row["last_ping"],
+            "status": status
+        })
 
-@app.route('/sonde1', methods=['GET', 'POST'])
-def sonde1():
-    # Optionally process JSON data if a POST is made.
-    data = request.get_json()
-    if data:
-        return render_template('sonde1.html')
+    # Pass the list of probes to the template
+    return render_template('index.html', probes=probes)
 
-@app.route('/sonde2')
-def sonde2():
-    return render_template('sonde2.html')
+@app.route('/probe')
+def probe_detail():
+    probe_id = request.args.get('id')
+    if not probe_id:
+        return "Probe ID is required", 400
 
-@app.route('/sonde3')
-def sonde3():
-    return render_template('sonde3.html')
+    conn = get_db_connection()
+    # Get all scans for the given probe. Use SQLite's date() to extract the date portion.
+    query = """
+        SELECT *, date(scan_date) as scan_day
+        FROM scans
+        WHERE probe_id = ?
+        ORDER BY scan_date DESC
+    """
+    scans = conn.execute(query, (probe_id,)).fetchall()
+    conn.close()
+
+    # Group scans by date.
+    grouped_scans = {}
+    for scan in scans:
+        day = scan['scan_day']
+        if day not in grouped_scans:
+            grouped_scans[day] = []
+        grouped_scans[day].append(scan)
+
+    # Sort the groups by date descending.
+    sorted_groups = sorted(grouped_scans.items(), key=lambda x: x[0], reverse=True)
+    
+    return render_template('probe.html', probe_id=probe_id, grouped_scans=sorted_groups)
+
 
 # -------------------------------
 # API Endpoints for Scans Table
