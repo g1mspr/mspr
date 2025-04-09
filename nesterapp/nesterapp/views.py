@@ -16,14 +16,35 @@ def get_db_connection():
 # -------------------------------
 @app.route('/')
 def index():
+<<<<<<< HEAD
+=======
+
+    return render_template('login.html')
+
+@app.route('/login')
+
+def login():
+
+    return render_template('login.html')
+
+@app.route('/accueil')
+
+def accueil():
+
+>>>>>>> 8a9aa89 (amélioration de l'interface graphique du nester)
     return render_template('index.html')
 
 @app.route('/sonde1', methods=['GET', 'POST'])
 def sonde1():
     # Optionally process JSON data if a POST is made.
     data = request.get_json()
+<<<<<<< HEAD
     # Here you can add further processing logic based on data.
     return render_template('sonde1.html')
+=======
+    if data:
+        return render_template('sonde1.html')
+>>>>>>> 8a9aa89 (amélioration de l'interface graphique du nester)
 
 @app.route('/sonde2')
 def sonde2():

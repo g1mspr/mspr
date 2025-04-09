@@ -1,12 +1,22 @@
+/* Styles communs à toutes les pages */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
     background-color: #f4f4f4;
+}
+
+.bandeau {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+    position: absolute;
+    top: 0;
 }
 
 .container {
@@ -15,22 +25,134 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 60px; /* Ajouté pour éviter le chevauchement avec le bandeau */
 }
 
 h1 {
     color: #333;
 }
 
-.dashboard, .dropdown {
-    margin-top: 20px;
+/* Styles spécifiques à la page de login */
+.login .container {
+    width: 250px;
 }
 
-.dashboard h2, .dropdown h2 {
+.login .login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login .login-form h2 {
+    margin-bottom: 1em;
     color: #555;
 }
 
-select {
+.login .login-form label {
+    margin-bottom: 0.5em;
+}
+
+.login .login-form input {
+    margin-bottom: 1em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.login .login-form button {
+    padding: 0.7em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login .login-form button:hover {
+    background-color: #45a049;
+}
+
+/* Styles spécifiques aux pages sonde1, sonde2, sonde3 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: #f4f4f4;
+}
+
+/* Bandeau vert sur le côté gauche */
+.sidebar {
+    width: 200px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 1em;
+    position: relative;
+    right: 570px;
+    height: 100vh;
+}
+
+.sidebar h1 {
+    margin-top: 0;
+}
+
+.sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.sidebar nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Contenu principal */
+.main-content {
+    margin-left: 200px;
+    padding: 20px;
+    width: calc(100% - 200px);
+}
+
+.sonde .dashboard {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.sonde .dashboard h2 {
+    color: #555;
+}
+
+.sonde select {
     margin-top: 10px;
     padding: 5px;
     font-size: 16px;
+
+}
+
+/* Styles spécifiques à la page d'accueil */
+.accueil .welcome-message {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.accueil .feature-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.accueil .feature-list li {
+    margin: 10px 0;
 }

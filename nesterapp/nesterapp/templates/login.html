@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login">
+    <header class="bandeau">
+        <h1>Bienvenue sur notre site</h1>
+    </header>
+    <div class="container">
+        <form class="login-form">
+            <h2>Connexion</h2>
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" required>
+            <label for="password">Mot de passe:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Se connecter</button>
+        </form>
+    </div>
+</body>
+</html>
