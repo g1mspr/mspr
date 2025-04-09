@@ -17,9 +17,13 @@ scan_started = False
 def get_network_interfaces():
     interfaces = {}
     list_interfaces = psutil.net_if_addrs()
-    for interface in list_interfaces.keys():
-        interfaces[interface] = {'ip': list_interfaces[interface][1][1], 'netmask': list_interfaces[interface][1][2]}
+    for interface, addrs in list_interfaces.items():
+        for addr in addrs:
+            if addr.family == socket.AF_INET:  # Check if the address is IPv4
+                interfaces[interface] = {'ip': addr.address, 'netmask': addr.netmask}
+                break  # Stop after the first IPv4 address is found
     return interfaces
+
 
 def calculate_network_range(ip, netmask):
     network = IPv4Network(f"{ip}/{netmask}", strict=False)
@@ -135,4 +139,4 @@ def update_table(n_intervals):
     return data
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True)
