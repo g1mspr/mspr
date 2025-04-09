@@ -26,13 +26,13 @@ def calculate_network_range(ip, netmask):
     network = IPv4Network(f"{ip}/{netmask}", strict=False)
     return str(network)
 
-def scan_network(network):
+def scan_network(network, interface):
     global devices
     devices = {}
     arp_request = scapy.ARP(pdst=network)
     broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_request_broadcast = broadcast / arp_request
-    answered = scapy.srp(arp_request_broadcast, timeout=2, verbose=False)[0]
+    answered = scapy.srp(arp_request_broadcast, timeout=2, iface=interface, verbose=False)[0]
     
     for sent, received in answered:
         devices[received.psrc] = {"mac": received.hwsrc, "ports": []}
@@ -61,8 +61,8 @@ def worker():
             devices[ip]["ports"].append(port)
         queue.task_done()
 
-def start_scan(network, port_range):
-    scan_network(network)
+def start_scan(network, port_range, interface):
+    scan_network(network, interface)
     ips = list(devices.keys())
     ports = range(port_range[0], port_range[1] + 1)
     fill_queue(ips, ports)
@@ -133,7 +133,7 @@ def create_dash_app(flask_app):
             ip = interfaces[interface]['ip']
             netmask = interfaces[interface]['netmask']
             network = calculate_network_range(ip, netmask)
-            threading.Thread(target=start_scan, args=(network, (port_start, port_end))).start()
+            threading.Thread(target=start_scan, args=(network, (port_start, port_end), interface)).start()
         return False
 
     @dash_app.callback(Output('result-table', 'data'), Input('interval', 'n_intervals'))
