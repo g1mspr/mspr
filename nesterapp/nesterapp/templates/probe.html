@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Détails de la sonde {{ probe_id }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 20px;
+      color: #333;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      text-align: center;
+    }
+    .group {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .group h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #555;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    .scan {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .scan:last-child {
+      border-bottom: none;
+    }
+    .scan p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Détails de la sonde {{ probe_id }}</h1>
+
+  {% if grouped_scans|length > 0 %}
+    {% for date, scans in grouped_scans %}
+      <div class="group">
+        <h2>Date: {{ date }}</h2>
+        {% for scan in scans %}
+          <div class="scan">
+            <p><strong>IP:</strong> {{ scan.ip_address }} | <strong>MAC:</strong> {{ scan.mac_address }}</p>
+            <p><strong>Ports:</strong> {{ scan.ports }}</p>
+            <p><strong>Scan Time:</strong> {{ scan.scan_date }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Aucun scan trouvé pour cette sonde.</p>
+  {% endif %}
+</body>
+</html>

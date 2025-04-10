@@ -1,65 +1,377 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page d'accueil</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .header {
-            background-color: #f8f9fa;
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        .sidebar {
-            background-color: #4CAF50; /* Vert */
-            padding: 10px;
-            width: 200px;
-            position: fixed;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
-        .sidebar h2 {
-            color: white;
-        }
-        .content {
-            margin-left: 220px;
-            padding: 20px;
-        }
-    </style>
-    <script>
-        function handleSelectChange() {
-            var selectedValue = document.getElementById("sondes").value;
-            if (selectedValue) {
-                window.location.href = selectedValue;
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <title>Page d'accueil avec Mode Sombre</title>
+  <!-- Import Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* ===============================
+       VARIABLES DE COULEURS
+       =============================== */
+       :root {
+      /* Enhanced gradient with 3 color stops */
+      --bg-gradient: linear-gradient(135deg, #f0f2f5 0%, #d0d2d5 50%, #b0b1b4 100%);
+      --text-color: #333;
+      --header-bg: linear-gradient(135deg, #4CAF50, #81C784);
+      --header-text: #fff;
+      --sidebar-bg: #4CAF50;
+      --card-bg: #fff;
+      --card-shadow: rgba(0,0,0,0.1);
+      --online-color: #388e3c;
+      --offline-color: #d32f2f;
+    }
+    
+    /* ===============================
+       MODE SOMBRE (DARK MODE)
+       =============================== */
+    .dark-mode {
+      /* Enhanced dark gradient with additional stops */
+      --bg-gradient: linear-gradient(135deg, #18191A 10%, #2a2b2c 50%, #3a3b3c 100%);
+      --text-color: #E4E6EB;
+      --header-bg: linear-gradient(135deg, #212121, #424242);
+      --header-text: #E4E6EB;
+      --sidebar-bg: #242526;
+      --card-bg: #3A3B3C;
+      --card-shadow: rgba(255,255,255,0.05);
+      --online-color: #66BB6A;
+      --offline-color: #EF5350;
+    }
+    
+    /* ===============================
+       GLOBAL STYLES
+       =============================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease, color 0.3s ease;
+      height: 100vh;
+    }
+    
+    /* ===============================
+       HEADER
+       =============================== */
+    .header {
+      background: var(--header-bg);
+      padding: 20px;
+      text-align: center;
+      color: var(--header-text);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .header h1 {
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+    /* Bouton pour le mode sombre (moved to sidebar in this version) */
+    
+    /* ===============================
+       SIDEBAR
+       =============================== */
+    .sidebar {
+      background-color: var(--sidebar-bg);
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      padding: 30px 20px;
+      box-shadow: 2px 0 10px var(--card-shadow);
+    }
+    .sidebar h2 {
+      color: var(--header-text);
+      margin-bottom: 20px;
+      font-size: 20px;
+      text-align: center;
+    }
+    .sidebar select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+    .sidebar nav ul {
+      list-style: none;
+      margin-top: 30px;
+      padding: 0;
+    }
+    .sidebar nav ul li {
+      margin: 15px 0;
+      text-align: center;
+    }
+    .sidebar nav ul li a {
+      color: var(--header-text);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .sidebar nav ul li a:hover {
+      color: #e0e0e0;
+    }
+    .dark-mode-toggle {
+      border: 2px solid var(--header-text);
+      color: var(--header-text);
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .dark-mode-toggle:hover {
+      background: var(--header-text);
+      color: var(--header-bg);
+    }
+    
+    /* ===============================
+       CONTENT WRAPPER
+       =============================== */
+    .content {
+      margin-left: 220px;
+      padding: 40px 30px;
+    }
+    
+    /* ===============================
+       DASHBOARD SECTION
+       =============================== */
+    .dashboard {
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px var(--card-shadow);
+      animation: fadeIn 0.5s;
+    }
+    .dashboard h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--sidebar-bg);
+      border-bottom: 2px solid var(--bg-color);
+      padding-bottom: 10px;
+    }
+    /* Override for dark mode to set h2 as white */
+    .dark-mode .dashboard h2 {
+      color: #fff;
+      border-bottom: 2px solid #fff;
+    }
+    
+    /* ===============================
+       PROBE CARDS
+       =============================== */
+    .probes-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .probe {
+      background-color: var(--card-bg);
+      width: 220px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px var(--card-shadow);
+      text-align: center;
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .probe:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px var(--card-shadow);
+    }
+    .probe h3 {
+      margin-bottom: 8px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .probe p {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    
+    /* ===============================
+       STATUS COLORS
+       =============================== */
+    .online {
+      border-left: 5px solid var(--online-color);
+    }
+    .offline {
+      border-left: 5px solid var(--offline-color);
+    }
+    .online h3,
+    .online p {
+      color: var(--online-color);
+    }
+    .offline h3,
+    .offline p {
+      color: var(--offline-color);
+    }
+    
+    /* ===============================
+       LOGIN PAGE SPECIFICS
+       =============================== */
+    .login .container {
+      width: 300px;
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px var(--card-shadow);
+      margin: 80px auto;
+    }
+    .login .login-form {
+      display: flex;
+      flex-direction: column;
+    }
+    .login .login-form h2 {
+      margin-bottom: 1em;
+      color: var(--text-color);
+      text-align: center;
+    }
+    .login .login-form label {
+      margin-bottom: 0.5em;
+      font-size: 14px;
+    }
+    .login .login-form input {
+      margin-bottom: 1em;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .login .login-form button {
+      padding: 0.8em;
+      background-color: var(--sidebar-bg);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .login .login-form button:hover {
+      background-color: #45a049;
+    }
+    
+    /* ===============================
+       ACCUEIL PAGE SPECIFICS
+       =============================== */
+    .accueil .welcome-message {
+      font-size: 1.8em;
+      color: var(--text-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .accueil .feature-list {
+      list-style: none;
+      padding: 0;
+      font-size: 16px;
+    }
+    .accueil .feature-list li {
+      margin: 10px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .accueil .feature-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--sidebar-bg);
+    }
+    
+    /* ===============================
+       ANIMATIONS
+       =============================== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  
+  <script>
+    // Fonction pour basculer le mode sombre
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      // Stocker la préférence dans le stockage local
+      localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
+    }
+    
+    // Vérifier la préférence stockée
+    window.addEventListener("DOMContentLoaded", function() {
+      const darkModeEnabled = localStorage.getItem("dark-mode") === "true";
+      if (darkModeEnabled) {
+        document.body.classList.add("dark-mode");
+      }
+    });
+    
+    function handleSelectChange() {
+      var selectedValue = document.getElementById("sondes").value;
+      if (selectedValue) {
+        window.location.href = selectedValue;
+      }
+    }
+  </script>
 </head>
+
 <body>
-    <div class="header">
-        <h1>Bienvenue sur la page d'accueil</h1>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <nav>
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#">Sondes</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="content">
+    <div class="dashboard">
+      <h2>Dashboard des sondes</h2>
+      <div class="probes-container">
+        {% for probe in probes %}
+          <a href="/probe?id={{ probe.probe_id }}" style="text-decoration: none; color: inherit;">
+            <div class="probe {% if probe.status == 'online' %}online{% else %}offline{% endif %}">
+              <h3>Sonde {{ probe.probe_id }}</h3>
+              <p>Status: <strong>{{ probe.status }}</strong></p>
+              <p>Dernier ping:<br>{{ probe.last_ping }}</p>
+            </div>
+          </a>
+        {% endfor %}
+        
+        {% if probes|length == 0 %}
+          <p>Aucune sonde enregistrée.</p>
+        {% endif %}
+      </div>
     </div>
-    <div class="sidebar">
-        <h2>Liste des sondes</h2>
-        <select name="sondes" id="sondes" onchange="handleSelectChange()">
-            <option value="">--Choisissez une sonde--</option>
-            <option value="sonde1">Sonde 1</option>
-            <option value="sonde2">Sonde 2</option>
-            <option value="sonde3">Sonde 3</option>
-        </select>
-    </div>
-    <div class="content">
-        <div class="dashboard">
-            <h2>Dashboards</h2>
-            <p>Contenu du dashboard...</p>
-        </div>
-    </div>
+  </div>
+  <button style="position: fixed; left: 10px; bottom: 50px; background-color: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 14px; z-index: 1000;" class="dark-mode-toggle" onclick="toggleDarkMode()">Mode Sombre</button>
+
+  <!-- Countdown timer element at the bottom left -->
+  <div id="countdown" style="position: fixed; left: 10px; bottom: 10px; background-color: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 14px; z-index: 1000;">
+    Refresh in: 30 seconds
+  </div>
+  
+  <!-- Countdown script: refresh every 30 seconds -->
+  <script>
+    var countdown = 30;
+    var countdownElement = document.getElementById('countdown');
+    var timer = setInterval(function() {
+      countdown--;
+      countdownElement.textContent = "Refresh in: " + countdown + " second" + (countdown !== 1 ? "s" : "");
+      if(countdown <= 0) {
+        clearInterval(timer);
+        window.location.reload();
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
