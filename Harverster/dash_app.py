@@ -209,7 +209,7 @@ def create_dash_app(flask_app):
     ]
 
     dash_app.layout = html.Div(className="container mt-5", children=[
-        html.H1("Network Scanner Dashboard", className="text-center mb-4"),
+        html.H1("Dashboard Scanner du Harverster", className="text-center mb-4"),
 
         html.Div(className="row mb-3", children=[
             html.Div(className="col-md-6", children=[
